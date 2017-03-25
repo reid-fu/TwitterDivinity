@@ -1,5 +1,7 @@
 # Local files
 creds
+.project
+.pydevproject
 
 # Windows image file caches
 Thumbs.db
@@ -18,7 +20,7 @@ $RECYCLE.BIN/
 *.msp
 
 # Windows shortcuts
-*.lnk
+*.lnkhttps://github-windows.s3.amazonaws.com/GitHubSetup.exe
 
 # =========================
 # Operating System Files
