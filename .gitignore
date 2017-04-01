@@ -1,5 +1,6 @@
 # Local files
-creds
+twitter_creds
+watson_creds
 .classpath
 .project
 .pydevproject
