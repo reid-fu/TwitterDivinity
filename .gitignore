@@ -5,6 +5,7 @@ watson_creds
 .project
 .pydevproject
 .settings/*
+src/python/__pycache__/*
 
 # Windows image file caches
 Thumbs.db
