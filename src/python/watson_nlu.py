@@ -20,6 +20,14 @@ class WatsonNLU(object):
         for tag in tags:
             if tag == "sentiment":
                 f_list.append(features.Sentiment())
+            elif tag == "categories":
+                f_list.append(features.Categories())
+            elif tag == "concepts":
+                f_list.append(features.Concepts())
+            elif tag == "emotion":
+                f_list.append(features.Emotion())
+            elif tag == "entities":
+                f_list.append(features.Entities())
         return f_list
     
 class NLUCreds(object):
