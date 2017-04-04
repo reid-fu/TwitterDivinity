@@ -3,7 +3,7 @@ from TwitterSearch import *
 try:
     #tuo = TwitterUserOrder('realDonaldTrump') # create a TwitterUserOrder
     tso = TwitterSearchOrder()
-    tso.set_keywords(['Donald', 'Trump'])
+    tso.set_keywords(['Donald', 'Trump', '-filter:retweets'])
     tso.set_language('en')
     tso.set_include_entities(True)
     
