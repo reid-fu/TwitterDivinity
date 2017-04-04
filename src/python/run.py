@@ -27,9 +27,9 @@ def classify_nb(train_data, train_labels, test_data, test_labels):
     # classify
     predicted = clf.predict(x_new_tf)
     correct = 0
-    for doc, category, actual_category in zip(test_data, predicted, test_labels):
-        #print("%s (%s): %r\n" % (doc, category, actual_category))
-        if category == actual_category:
+    for doc, guess, actual in zip(test_data, predicted, test_labels):
+        #print("%s (%s): %r\n" % (doc, guess, actual))
+        if guess == actual:
             correct += 1
     print("NB Accuracy: %d/%d" % (correct, len(predicted)))
 
@@ -42,7 +42,7 @@ def classify_nn(data, labels):
     for t, l in zip(data, labels):
         w = nltk.word_tokenize(t)
         words.extend(w)
-        docs.append((w, l))
+        docs.append(w)
     stemmer = LancasterStemmer()
     words = [stemmer.stem(w.lower()) for w in words if "//t.co/" not in w] # remove urls
     words = list(set(words))
@@ -51,12 +51,10 @@ def classify_nn(data, labels):
     input_vectors = []
     for d in docs:
         bag = []
-        doc_words = d[0]
-        doc_words = [stemmer.stem(w.lower()) for w in doc_words]
+        doc_words = [stemmer.stem(w.lower()) for w in d]
         for w in words:
             bag.append(int(w in doc_words))
         input_vectors.append(bag)
-    #print(training_vectors[0])
     
     # split into test/train data sets
     split_idx = int(len(data) * 0.8)
@@ -68,10 +66,11 @@ def classify_nn(data, labels):
 
     # train MLP
     clf = MLPClassifier(solver='lbfgs', alpha=1e-5,  activation='logistic',
-                        hidden_layer_sizes=(5, 2), random_state=1)
+                        hidden_layer_sizes=(15, 10, 2), random_state=1)
     clf.fit(train_data, train_labels)
     predictions = clf.predict(test_data)
     
+    # test MLP
     correct = 0
     for text, guess, actual in zip(test_text, predictions, test_labels):
         print("%d (%d): %s\n" % (guess, actual, text))
