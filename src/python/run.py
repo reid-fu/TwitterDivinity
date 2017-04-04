@@ -1,4 +1,5 @@
 import json
+
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -42,7 +43,6 @@ def classify_nb(data):
 
 if __name__ == '__main__':
     data_file = open("data_set")
-    
     json_data = json.load(data_file)
     count_vect = CountVectorizer()
     count_map = count_vect.fit_transform(json_data.data)
