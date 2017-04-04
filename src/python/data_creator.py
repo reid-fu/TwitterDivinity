@@ -23,7 +23,7 @@ for tweet in twitter.search(['Donald', 'Trump']):
         tag_types = ["sentiment", "categories", "concepts", "emotion", "entities"]
         annotations = nlu.annotate(text, tag_types)
 
-        file.write(annotations["sentiment"])
+        file.write(annotations["sentiment"]["document"]["label"])
         file.write(' ')
         file.write(text)
         file.write('\n')
