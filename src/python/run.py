@@ -3,18 +3,18 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 
+import nltk
+from nltk.stem.lancaster import LancasterStemmer
+
 # Naive Bayes implementation
 def classify_nb(train_data, train_labels, test_data, test_labels):
     # come up with word counts
     count_vect = CountVectorizer()
     x_train_counts = count_vect.fit_transform(train_data)
     
-    # come up with frequencies using tf
-    # EXPIREMENT test tf vs. tfidf
-    tf_transformer = TfidfTransformer(use_idf=False).fit(x_train_counts)
-    x_train_tf = tf_transformer.transform(x_train_counts)
-    #tf_transformer = TfidfTransformer()
-    #x_train_tf = tf_transformer.fit_transform(x_train_counts)
+    # come up with frequencies using tfidf
+    tf_transformer = TfidfTransformer()
+    x_train_tf = tf_transformer.fit_transform(x_train_counts)
     
     # train naive bayes
     clf = MultinomialNB().fit(x_train_tf, train_labels)
@@ -30,13 +30,32 @@ def classify_nb(train_data, train_labels, test_data, test_labels):
         print("%r => %s (%s)\n" % (doc, category, actual_category))
         if category == actual_category:
             correct += 1
-            
     print("Correct: %d/%d" % (correct, len(predicted)))
 
-
+# Neural network implementation
 def classify_nn(train_data, train_labels, test_data, test_labels):
-    print("neural net")
-    # convert to array of n feature vectors
+    # stem/count words
+    words = []
+    docs = []
+    for t, l in zip(train_data, train_labels):
+        w = nltk.word_tokenize(t)
+        words.extend(w)
+        docs.append((w, l))
+    stemmer = LancasterStemmer()
+    words = [stemmer.stem(w.lower()) for w in words if "//t.co/" not in w] # remove urls
+    words = list(set(words))
+        
+    # bag of words for each sentence
+    training_vectors = []
+    for d in docs:
+        bag = []
+        doc_words = d[0]
+        doc_words = [stemmer.stem(w.lower()) for w in doc_words]
+        for w in words:
+            bag.append(int(w in doc_words))
+        training_vectors.append(bag)
+    
+    print(training_vectors[0])
     
     
 
@@ -50,7 +69,7 @@ if __name__ == '__main__':
     test_data = json_data['tweets'][split_idx+1:]
     test_labels = json_data['sentiment'][split_idx:]
 
-    # test classifier with naive bayes
-    classify_nb(train_data, train_labels, test_data, test_labels)
+    # test naive bayes and neurral network
+    #classify_nb(train_data, train_labels, test_data, test_labels)
     classify_nn(train_data, train_labels, test_data, test_labels)
     
