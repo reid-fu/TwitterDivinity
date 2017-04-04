@@ -24,7 +24,8 @@ docs_new = ['God is love', 'OpenGL on the GPU is fast']
 x_new_counts = count_vect.transform(docs_new)
 x_new_tfidf = tfidf_transformer.transform(x_new_counts)
 
-# predict
+# classify
 predicted = clf.predict(x_new_tfidf)
 for doc, category in zip(docs_new, predicted):
     print("%r => %s" % (doc, train.target_names[category]))
+
