@@ -52,15 +52,3 @@ if __name__ == '__main__':
     classify_nb(train_data, train_labels, test_data, test_labels)
     classify_nn(train_data, train_labels, test_data, test_labels)
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
