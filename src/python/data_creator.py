@@ -22,11 +22,28 @@ for tweet in twitter.search(['Donald', 'Trump', '-filter:retweets']):
         text = tweet['text']
         tag_types = ["sentiment", "categories", "concepts", "emotion", "entities"]
         annotations = nlu.annotate(text, tag_types)
-        data['tweets'].append(text)
-        data['sentiment'].append(annotations["sentiment"]["document"]["label"])
+
+        sentString = annotations["sentiment"]["document"]["label"]
+
+        sentInt = -2;
+
+        if sentString == 'negative':
+        	sentInt = -1
+        
+
+        elif sentString == "neutral":
+        	sentInt = 0
+     
+
+        elif sentString == "positive":
+        	sentInt = 1
+        
+
+        data ['tweets'].append(text)
+        data ['sentiment'].append(sentInt)
     except Exception as e:
         print(e)
         continue
 
-with open('../results/data', 'w') as outfile:  
+with open('../../results/data', 'w') as outfile:  
     json.dump(data, outfile)
