@@ -35,7 +35,9 @@ def classify_nb(train_data, train_labels, test_data, test_labels):
 
 
 def classify_nn(train_data, train_labels, test_data, test_labels):
-    print("")    
+    print("neural net")
+    # convert to array of n feature vectors
+    
     
 
 if __name__ == '__main__':
