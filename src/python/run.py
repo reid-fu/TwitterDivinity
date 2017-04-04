@@ -28,15 +28,15 @@ def classify_nb(train_data, train_labels, test_data, test_labels):
     predicted = clf.predict(x_new_tf)
     correct = 0
     for doc, guess, actual in zip(test_data, predicted, test_labels):
-        #print("%s (%s): %r\n" % (doc, guess, actual))
+        print("%s (%s): %r\n" % (guess, actual, doc))
         if guess == actual:
             correct += 1
-    print("NB Accuracy: %d/%d" % (correct, len(predicted)))
+    print("NB Accuracy: %d/%d\n\n\n" % (correct, len(predicted)))
 
 
 # Neural network implementation
 def classify_nn(data, labels):    
-    # stem/count words
+    # create corpus of stemmed words
     words = []
     docs = []
     for t, l in zip(data, labels):
@@ -47,7 +47,7 @@ def classify_nn(data, labels):
     words = [stemmer.stem(w.lower()) for w in words if "//t.co/" not in w] # remove urls
     words = list(set(words))
         
-    # bag of words for each sentence
+    # bag of words for each tweet
     input_vectors = []
     for d in docs:
         bag = []
@@ -83,6 +83,7 @@ if __name__ == '__main__':
     # get data and split into train and test sets
     data_file = open("../../results/data")
     json_data = json.load(data_file)
+    data_file.close()
     split_idx = int(len(json_data['tweets']) * 0.8)
     train_data = json_data['tweets'][:split_idx]
     train_labels = json_data['sentiment'][:split_idx]
