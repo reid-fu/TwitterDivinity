@@ -12,6 +12,9 @@
 - https://www.youtube.com/watch?v=jSZ9jQy1sfE
 - http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html
 
+scikit neural network api: 
+http://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html#sklearn.neural_network.MLPClassifier
+
 ## Assignments
 - Dan: Scraping
 - Reid: Feature engineering

@@ -2,6 +2,7 @@ import json
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.neural_network import MLPClassifier
 
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
@@ -27,14 +28,14 @@ def classify_nb(train_data, train_labels, test_data, test_labels):
     predicted = clf.predict(x_new_tf)
     correct = 0
     for doc, category, actual_category in zip(test_data, predicted, test_labels):
-        print("%r => %s (%s)\n" % (doc, category, actual_category))
+        #print("%s (%s): %r\n" % (doc, category, actual_category))
         if category == actual_category:
             correct += 1
-    print("Correct: %d/%d" % (correct, len(predicted)))
+    print("NB Accuracy: %d/%d" % (correct, len(predicted)))
 
 
 # Neural network implementation
-def classify_nn(data, labels):
+def classify_nn(data, labels):    
     # stem/count words
     words = []
     docs = []
@@ -47,27 +48,37 @@ def classify_nn(data, labels):
     words = list(set(words))
         
     # bag of words for each sentence
-    training_vectors = []
+    input_vectors = []
     for d in docs:
         bag = []
         doc_words = d[0]
         doc_words = [stemmer.stem(w.lower()) for w in doc_words]
         for w in words:
             bag.append(int(w in doc_words))
-        training_vectors.append(bag)
-    
-    print(training_vectors[0])
+        input_vectors.append(bag)
+    #print(training_vectors[0])
     
     # split into test/train data sets
     split_idx = int(len(data) * 0.8)
-    train_data = data[:split_idx]
+    train_data = input_vectors[:split_idx]
     train_labels = labels[:split_idx]
-    test_data = data[split_idx+1:]
+    test_data = input_vectors[split_idx:]
     test_labels = labels[split_idx:]
+    test_text = data[split_idx:]
+
+    # train MLP
+    clf = MLPClassifier(solver='lbfgs', alpha=1e-5,  activation='logistic',
+                        hidden_layer_sizes=(5, 2), random_state=1)
+    clf.fit(train_data, train_labels)
+    predictions = clf.predict(test_data)
     
-    
-    
-    
+    correct = 0
+    for text, guess, actual in zip(test_text, predictions, test_labels):
+        print("%d (%d): %s\n" % (guess, actual, text))
+        if guess == actual:
+            correct += 1
+    print("NN Accuracy: %d/%d" % (correct, len(predictions)))
+        
 
 if __name__ == '__main__':
     # get data and split into train and test sets
@@ -76,10 +87,10 @@ if __name__ == '__main__':
     split_idx = int(len(json_data['tweets']) * 0.8)
     train_data = json_data['tweets'][:split_idx]
     train_labels = json_data['sentiment'][:split_idx]
-    test_data = json_data['tweets'][split_idx+1:]
+    test_data = json_data['tweets'][split_idx:]
     test_labels = json_data['sentiment'][split_idx:]
 
     # test naive bayes and neurral network
-    #classify_nb(train_data, train_labels, test_data, test_labels)
+    classify_nb(train_data, train_labels, test_data, test_labels)
     classify_nn(json_data['tweets'], json_data['sentiment'])
     
