@@ -33,6 +33,9 @@ def classify_nb(train_data, train_labels, test_data, test_labels):
 def classify_nn(train_data, train_labels, test_data, test_labels):
     print("neural net here")    
     
+def naiveBayes(train_data, train_labels, test_data):
+    classifier = MultinomialNB().fit(train_data, train_labels)
+    return classifier.predict(test_data)
 
 if __name__ == '__main__':
     # get data and split into train and test sets
@@ -43,20 +46,9 @@ if __name__ == '__main__':
     train_labels = json_data.sentiment[:split_idx]
     test_data = json_data.tweets[split_idx+1:]
     test_labels = json_data.sentiment[split_idx:]
+    count_vect = CountVectorizer()
+    count_map = count_vect.fit_transform(json_data.tweets)
 
     # test classifier with naive bayes
     classify_nb(train_data, train_labels, test_data, test_labels)
     classify_nn(train_data, train_labels, test_data, test_labels)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
