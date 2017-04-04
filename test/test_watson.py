@@ -1,3 +1,7 @@
+# had to add these lines to find src directory - evan
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 from TwitterSearch import *
 from src.python.twitter_caller import TwitterCaller
 from src.python.watson_nlu import WatsonNLU

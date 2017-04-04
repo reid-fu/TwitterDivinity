@@ -10,6 +10,7 @@
 - https://github.com/ckoepp/TwitterSearch
 - https://twittersearch.readthedocs.io/en/latest/advanced_usage_ts.html
 - https://www.youtube.com/watch?v=jSZ9jQy1sfE
+- http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html
 
 ## Assignments
 - Dan: Scraping
