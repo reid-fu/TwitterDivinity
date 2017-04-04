@@ -27,6 +27,8 @@ def classify_nb(data):
     # EXPIREMENT test tf vs. tfidf
     tf_transformer = TfidfTransformer(use_idf=False).fit(x_train_counts)
     x_train_tf = tf_transformer.transform(x_train_counts)
+    #tf_transformer = TfidfTransformer()
+    #x_train_tf = tf_transformer.fit_transform(x_train_counts)
     
     # train naive bayes
     clf = MultinomialNB().fit(x_train_tf, train_labels)
