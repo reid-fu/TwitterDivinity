@@ -32,12 +32,13 @@ def classify_nb(train_data, train_labels, test_data, test_labels):
             correct += 1
     print("Correct: %d/%d" % (correct, len(predicted)))
 
+
 # Neural network implementation
-def classify_nn(train_data, train_labels, test_data, test_labels):
+def classify_nn(data, labels):
     # stem/count words
     words = []
     docs = []
-    for t, l in zip(train_data, train_labels):
+    for t, l in zip(data, labels):
         w = nltk.word_tokenize(t)
         words.extend(w)
         docs.append((w, l))
@@ -57,6 +58,15 @@ def classify_nn(train_data, train_labels, test_data, test_labels):
     
     print(training_vectors[0])
     
+    # split into test/train data sets
+    split_idx = int(len(data) * 0.8)
+    train_data = data[:split_idx]
+    train_labels = labels[:split_idx]
+    test_data = data[split_idx+1:]
+    test_labels = labels[split_idx:]
+    
+    
+    
     
 
 if __name__ == '__main__':
@@ -71,5 +81,5 @@ if __name__ == '__main__':
 
     # test naive bayes and neurral network
     #classify_nb(train_data, train_labels, test_data, test_labels)
-    classify_nn(train_data, train_labels, test_data, test_labels)
+    classify_nn(json_data['tweets'], json_data['sentiment'])
     
