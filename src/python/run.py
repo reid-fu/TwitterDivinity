@@ -1,5 +1,4 @@
 import json
-
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -46,10 +45,13 @@ def classify_nb(data):
 if __name__ == '__main__':
     data_file = open("data_set")
     json_data = json.load(data_file)
+    split_idx = int(len(json_data.tweets) * 0.8)
+    train_data = json_data.tweets[:split_idx]
+    train_labels = json_data.sentiment[:split_idx]
+    test_data = json_data.tweets[split_idx+1:]
+    test_labels = json_data.sentiment[split_idx:]
     count_vect = CountVectorizer()
     count_map = count_vect.fit_transform(json_data.data)
     
     # test classifier with naive bayes
     classify_nb(json_data.data)
-    
-    
