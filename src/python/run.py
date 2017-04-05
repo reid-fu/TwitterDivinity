@@ -28,10 +28,10 @@ def classify_nb(train_data, train_labels, test_data, test_labels):
     predicted = clf.predict(x_new_tf)
     correct = 0
     for doc, guess, actual in zip(test_data, predicted, test_labels):
-        print("%s (%s): %r\n" % (guess, actual, doc))
+       # print("%s (%s): %r\n" % (guess, actual, doc))
         if guess == actual:
             correct += 1
-    print("NB Accuracy: %d/%d\n\n\n" % (correct, len(predicted)))
+    print("NB Accuracy: %d/%d" % (correct, len(predicted)))
 
 
 # Neural network implementation
@@ -66,14 +66,14 @@ def classify_nn(data, labels):
 
     # train MLP
     clf = MLPClassifier(solver='lbfgs', alpha=1e-5,  activation='logistic',
-                        hidden_layer_sizes=(15, 10, 2), random_state=1)
+                        hidden_layer_sizes=(10, 2), random_state=1)
     clf.fit(train_data, train_labels)
     predictions = clf.predict(test_data)
     
     # test MLP
     correct = 0
     for text, guess, actual in zip(test_text, predictions, test_labels):
-        print("%d (%d): %s\n" % (guess, actual, text))
+        #print("%d (%d): %s\n" % (guess, actual, text))
         if guess == actual:
             correct += 1
     print("NN Accuracy: %d/%d" % (correct, len(predictions)))

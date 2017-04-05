@@ -7,7 +7,7 @@ from src.python.watson_nlu import WatsonNLU
 twitter = TwitterCaller("../../twitter_creds")
 nlu = WatsonNLU("../../watson_creds")
 tweet_count = 0
-max_tweet_count = 500
+max_tweet_count = 999
 data = {}
 data ['tweets'] = []
 data ['sentiment'] = []
@@ -20,7 +20,7 @@ for tweet in twitter.search(['Donald', 'Trump', '-filter:retweets']):
         print(tweet_count)
     try:
         text = tweet['text']
-        tag_types = ["sentiment", "categories", "concepts", "emotion", "entities"]
+        tag_types = ["sentiment"]
         annotations = nlu.annotate(text, tag_types)
 
         sentString = annotations["sentiment"]["document"]["label"]
