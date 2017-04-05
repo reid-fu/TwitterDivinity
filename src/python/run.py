@@ -65,8 +65,8 @@ def classify_nn(data, labels):
     test_text = data[split_idx:]
 
     # train MLP
-    clf = MLPClassifier(solver='lbfgs', alpha=1e-5,  activation='logistic',
-                        hidden_layer_sizes=(10, 2), random_state=1)
+    clf = MLPClassifier(solver='lbfgs', alpha=1e-3,  activation='logistic',
+                        hidden_layer_sizes=(20, 5), random_state=1)
     clf.fit(train_data, train_labels)
     predictions = clf.predict(test_data)
     
@@ -91,6 +91,6 @@ if __name__ == '__main__':
     test_labels = json_data['sentiment'][split_idx:]
 
     # test naive bayes and neurral network
-    classify_nb(train_data, train_labels, test_data, test_labels)
+    #classify_nb(train_data, train_labels, test_data, test_labels)
     classify_nn(json_data['tweets'], json_data['sentiment'])
     
