@@ -1,5 +1,5 @@
 import json
-filenames = ['data', 'data_1', 'data_2', 'data_3', 'data_4', 'data_5', 'data_6', 'data_7', 'data_8']
+filenames = ['data1', 'data2', 'data3', 'data4', 'data5', 'data6', 'data7']
 data = {}
 data['tweets'] = []
 data['sentiment'] = []
@@ -11,5 +11,5 @@ for fn in filenames:
     data['sentiment'].extend(json_data['sentiment'])
     file.close()
 
-with open('data_final', 'w') as outfile:  
+with open('data', 'w') as outfile:  
     json.dump(data, outfile)
