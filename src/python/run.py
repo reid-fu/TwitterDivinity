@@ -1,14 +1,18 @@
 import json
+import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neural_network import MLPClassifier
-import numpy as np
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
 
 # Naive Bayes implementation
-def classify_nb(train_data, train_labels, test_data):
+def classify_nb(data, labels):
+    split_idx = int(len(data) * 0.8)
+    train_data = data[:split_idx]
+    train_labels = labels[:split_idx]
+    test_data = data[split_idx:]
     # come up with word counts
     count_vect = CountVectorizer()
     x_train_counts = count_vect.fit_transform(train_data)
@@ -24,7 +28,41 @@ def classify_nb(train_data, train_labels, test_data):
     return clf.predict(x_new_tf)
 
 # Neural network implementation
-def classify_nn(data, labels):    
+def classify_nn(data, labels):
+    # create and split data set
+    input_vectors = create_model(data, labels)
+    split_idx = int(len(data) * 0.7)
+    split_idx2 = int(len(data) * 0.85)
+    train_data = input_vectors[:split_idx]
+    train_labels = labels[:split_idx]
+    valid_data = input_vectors[split_idx:split_idx2]
+    valid_labels = labels[split_idx:split_idx2]
+    test_data = input_vectors[split_idx2:]
+    # set parameter values on which to do validation
+    alpha_values = [1e-7, 1e-5, 1e-3, 1e-1]
+    hidden1_values = [20, 22, 25, 27, 30]
+    # train MLP
+    max_acc = 0
+    max_alpha = 0
+    max_hidden1 = 0
+    max_clf = None
+    for alpha in alpha_values:
+        for hidden1 in hidden1_values:
+            clf = MLPClassifier(solver='lbfgs', alpha=alpha,  activation='logistic',
+                        hidden_layer_sizes=(hidden1,5), random_state=1)
+            clf.fit(train_data, train_labels)
+            predict = clf.predict(valid_data)
+            acc = calc_accuracy(valid_labels, predict)
+            if acc > max_acc:
+                max_acc = acc
+                max_alpha = alpha
+                max_hidden1 = hidden1
+                max_clf = clf
+    print(max_alpha)
+    print(max_hidden1)
+    return max_clf.predict(test_data)
+
+def create_model(data, labels):
     # create corpus of stemmed words
     words = []
     docs = []
@@ -43,18 +81,7 @@ def classify_nn(data, labels):
         for w in words:
             bag.append(int(w in doc_words))
         input_vectors.append(bag)
-    # split into test/train data sets
-    split_idx = int(len(data) * 0.8)
-    train_data = input_vectors[:split_idx]
-    train_labels = labels[:split_idx]
-    test_data = input_vectors[split_idx:]
-    test_labels = labels[split_idx:]
-    test_text = data[split_idx:]
-    # train MLP
-    clf = MLPClassifier(solver='lbfgs', alpha=1e-5,  activation='logistic',
-                        hidden_layer_sizes=(25,), random_state=1) # best: (20,)
-    clf.fit(train_data, train_labels)
-    return clf.predict(test_data)
+    return input_vectors
         
 def calc_accuracy(expected_labels, actual_labels, text=None, bprint=False):
     if bprint:
@@ -68,18 +95,15 @@ if __name__ == '__main__':
     data_file = open("../../results/data")
     json_data = json.load(data_file)
     data_file.close()
-    split_idx = int(len(json_data['tweets']) * 0.8)
-    train_data = json_data['tweets'][:split_idx]
-    train_labels = json_data['sentiment'][:split_idx]
-    test_data = json_data['tweets'][split_idx:]
-    test_labels = json_data['sentiment'][split_idx:]
+    split_idx1 = int(len(json_data['tweets']) * 0.8)
+    split_idx2 = int(len(json_data['tweets']) * 0.85)
 
     # test naive bayes and neurral network
-    predicted1 = classify_nb(train_data, train_labels, test_data)
+    predicted1 = classify_nb(json_data['tweets'], json_data['sentiment'])
     predicted2 = classify_nn(json_data['tweets'], json_data['sentiment'])
     
     # calculate accuracy
-    acc1 = calc_accuracy(test_labels, predicted1)
-    acc2 = calc_accuracy(test_labels, predicted2)
+    acc1 = calc_accuracy(json_data['sentiment'][split_idx1:], predicted1)
+    acc2 = calc_accuracy(json_data['sentiment'][split_idx2:], predicted2)
     print("NB Accuracy: " + str(acc1))
     print("NN Accuracy: " + str(acc2))
